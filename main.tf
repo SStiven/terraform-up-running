@@ -122,7 +122,7 @@ data "aws_subnets" "default" {
 resource "aws_launch_configuration" "launch_config_one" {
     image_id = "ami-058bd2d568351da34"
     instance_type = "t2.micro"
-    security_groups = [aws_security_group.allow-web-access.id]
+    security_groups = [aws_security_group.alb_security_group_one.id]
 
     user_data = <<-EOF
         #!/bin/bash
@@ -140,8 +140,9 @@ resource "aws_autoscaling_group" "asg_one" {
     target_group_arns = [aws_lb_target_group.alb-target-group-one.arn]
     health_check_type = "ELB" #EC2
 
-    min_size = 2
-    max_size = 3
+    min_size = 1
+    desired_capacity = 1
+    max_size = 1
 
     lifecycle {
       create_before_destroy = true
